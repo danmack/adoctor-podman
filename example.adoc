@@ -1,0 +1,60 @@
+= AsciiDoctor, Podman and Diagrams Example
+:toc:
+:icons: font
+
+== Introduction
+
+This document's goal is to demonstrate a method of producing documentation
+with asciidoctor using an alpine linux docker container.
+
+ * derive documentation from files in git source control
+ * generate multiple output formats from the same source files
+ * integrate document generation into the build and packaging system
+
+[NOTE]
+.This is an example callout
+=================
+
+This is a separate paragraph.
+
+[a2s, format="svg"]
+....
+.-------------------------.
+|                         |
+| .---.-. .-----. .-----. |
+| | .-. | +-->  | |  <--| |
+| | '-' | |  <--| +-->  | |
+| '---'-' '-----' '-----' |
+|  ascii     2      svg   |
+|                         |
+'-------------------------'
+....
+
+=================
+
+== Example Usage
+
+[source,shell]
+.create html and pdf docs from this source file:
+----
+$ make
+docker run -it -v /Users/mack/src/ascii-easydocker:/docs/ alpdoc asciidoctor-pdf example.adoc
+docker run -it -v /Users/mack/src/ascii-easydocker:/docs/ alpdoc     asciidoctor example.adoc
+----
+
+== Appendix
+
+List of files currently in this repository.
+
+[source,shell]
+.File Listing with tree
+----
+.
+├── Dockerfile
+├── Makefile
+├── add-pkgs
+└── example.adoc
+
+0 directories, 4 files
+----
+
