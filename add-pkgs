@@ -1,0 +1,25 @@
+#!/bin/sh
+
+apt install :wq
+apk add --no-cache \
+    make gcc ruby ruby-dev ruby-bundler graphviz ruby-nokogiri \
+    unzip findutils which wget python3-dev zlib-dev \
+    patch sudo bash libjpeg-turbo libjpeg-turbo-dev \
+    asciidoctor pandoc go
+
+go install github.com/asciitosvg/asciitosvg/cmd/a2s@latest
+cp -v /root/go/bin/a2s /usr/local/bin
+
+cat > Gemfile <<EOF
+source 'https://rubygems.org'
+gem 'asciidoctor'
+gem 'asciidoctor-pdf'
+gem 'asciidoctor-diagram'
+EOF
+
+bundle
+
+echo ""
+echo "add pkg script completed"
+echo ""
+
