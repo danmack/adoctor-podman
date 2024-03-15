@@ -11,3 +11,7 @@ This project assists you in making asciidoctor easier to use by:
 This idea stems from the original Dockerfile in the asciidoctor sources
 years ago.
 
+## Example
+
+![AsciiDoctor Example w/Diagram](img/example.png "Example AsciiDoctor PNG")
+
