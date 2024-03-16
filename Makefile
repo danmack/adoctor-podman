@@ -30,12 +30,12 @@ example.xml: $(SRC) *.adoc
 image:
 	podman build -t alpdoc .
 
-.PHONY: clean
+.PHONY: clean cleanall
 
-clean:
+clean: 
 	rm -f *.pdf *.html *.xml diag-a2s*
 
 cleanall:
-	-podman rm $(podman ps -a | grep alpdoc | awk '{print $1}')
-	-podman rmi $(podman images -a | grep alpdoc | awk '{print $3}')
+	-podman container prune -f
+	-podman rmi $$(podman images -a | grep alpdoc | awk '{print $$3}')
 

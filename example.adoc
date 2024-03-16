@@ -1,10 +1,12 @@
 = AsciiDoctor, Podman and Diagrams Example
 :toc:
 :icons: font
+:source-highlighter: rouge
+:rouge-style: github.rb
 
 == Introduction
 
-This document's goal is to demonstrate a method of producing documentation
+This project demonstrates a method of producing documentation
 with asciidoctor using an alpine linux docker container.
 
  * derive documentation from files in git source control
@@ -15,12 +17,12 @@ with asciidoctor using an alpine linux docker container.
 .This is an example callout
 =================
 
-This is a separate paragraph.
+Informational: ascii2svg is enabled
 
 [a2s, format="svg"]
 ....
 .-------------------------.
-|                         |
+|     Ascii2SVG           |
 | .---.-. .-----. .-----. |
 | | .-. | +-->  | |  <--| |
 | | '-' | |  <--| +-->  | |
@@ -28,18 +30,92 @@ This is a separate paragraph.
 |  ascii     2      svg   |
 |                         |
 '-------------------------'
+
+.------------------------------------------.
+|                      .-----------------. |
+| '---------------'    |                 | |
+| | 192.168.1.1   +--->|  Office VLAN1   | |
+| '---------------'    |                 | |
+|      gateway         '-----------------' |
+'------------------------------------------'
 ....
 
 =================
 
 == Example Usage
 
-[source,shell]
+=== Shell Scripts
+
+[source,shell,linenums]
 .create html and pdf docs from this source file:
 ----
 $ make
-docker run -it -v /Users/mack/src/ascii-easydocker:/docs/ alpdoc asciidoctor-pdf example.adoc
-docker run -it -v /Users/mack/src/ascii-easydocker:/docs/ alpdoc     asciidoctor example.adoc
+podman run -it -v /home/mack/src/github/adoctor-podman:/docs/:z alpdoc \
+       asciidoctor -r asciidoctor-diagram example.adoc
+----
+
+=== Ruby
+
+[source,ruby,linenums]
+----
+# Say hi to everybody
+def say_hi
+  if @names.nil?
+    puts "..."
+  elsif @names.respond_to?("each")
+    # @names is a list of some kind, iterate!
+    @names.each do |name|
+      puts "Hello #{name}!"
+    end
+  else
+    puts "Hello #{@names}!"
+  end
+end
+----
+
+=== Zig
+Test if zig is supported by rogue:
+[source,zig,linenums]
+----
+const std = @import("std");
+const print = std.debug.print;
+
+pub fn main() !void {
+    const fileName = "input.txt";
+    const file = try std.fs.cwd().openFile(fileName, .{});
+    defer file.close();
+
+    var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
+    defer arena.deinit();
+
+    const allocator = arena.allocator();
+    const read_buf = try file.readToEndAlloc(allocator, 1024*1024);
+    defer allocator.free(read_buf);
+
+    var sum: u32 = 0;
+
+    var iter = std.mem.split(u8, read_buf, "\n");
+    while (iter.next()) |code| {
+        if (code.len > 0) {
+            var first: u8 = 0;
+            var last: u8 = 0;
+            var seen_first = false;
+            for (code) |dig| {
+                if (dig > 47 and dig < 58) {
+                    if (seen_first) {
+                        last = dig - 48;
+                    } else {
+                        seen_first = true;
+                        first = dig - 48;
+                        last = first;
+                    }
+                }
+            }
+            sum += (first * 10) + last;
+        }
+    }
+    print("Sum is {}\n", .{sum});
+}
 ----
 
 == Appendix
